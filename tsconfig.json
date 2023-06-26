@@ -1,5 +1,9 @@
 {
+  "extends": "@yellowryan01/tsconfig",
   "compilerOptions": {
-    "noImplicitAny":true
-  }
+    "outDir": "dist"
+  },
+  "include": [
+    "source"
+  ],
 }

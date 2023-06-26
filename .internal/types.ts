@@ -8,7 +8,7 @@ const primitiveTypeNames = [
 	'symbol',
 ] as const;
 
-const objectToStringMap = [
+export const objectTypeNames = [
   'String',
   'Number',
   'Boolean',
@@ -19,11 +19,12 @@ const objectToStringMap = [
   'WeakMap',
   'WeakSet',
   'RegExp',
-  'Function'
+  'Promise',
+  'Function',
 ] as const
 
 export type PrimitiveTypeName = typeof primitiveTypeNames[number];
-export type ObjectToStringMap = typeof objectToStringMap[number]
+export type ObjectTypeNames = typeof objectTypeNames[number]
 
 export type PrimitiveType =
   | undefined
@@ -34,6 +35,18 @@ export type PrimitiveType =
   | bigint
   | symbol
 
+export type TypedArray =
+  | Int8Array
+	| Uint8Array
+	| Uint8ClampedArray
+	| Int16Array
+	| Uint16Array
+	| Int32Array
+	| Uint32Array
+	| Float32Array
+	| Float64Array
+	| BigInt64Array
+	| BigUint64Array;
 
 export type FalsyType = undefined | null | '' | 0 | false
 
