@@ -12,4 +12,8 @@ describe('test utility-is', () => {
       return Promise.resolve(1);
     }})).toBe(true)
   })
+
+  it('should be a primitive', () => {
+    expect(u.isPrimitive(null)).toBe(true)
+  })
 })

@@ -1,4 +1,4 @@
-const primitiveTypeNames = [
+export const primitiveTypeNames = [
 	'null',
 	'undefined',
 	'string',
@@ -7,6 +7,20 @@ const primitiveTypeNames = [
 	'boolean',
 	'symbol',
 ] as const;
+
+export const typedArrayNames = [
+  'Int8Array',
+	'Uint8Array',
+	'Uint8ClampedArray',
+	'Int16Array',
+	'Uint16Array',
+	'Int32Array',
+	'Uint32Array',
+	'Float32Array',
+	'Float64Array',
+	'BigInt64Array',
+	'BigUint64Array',
+] as const
 
 export const objectTypeNames = [
   'String',
@@ -21,10 +35,20 @@ export const objectTypeNames = [
   'RegExp',
   'Promise',
   'Function',
+  'AsyncFunction',
+  'GeneratorFunction',
+  'Error',
+  'Date',
+  'NaN',
+  'Blob',
+  'Buffer',
+  ...typedArrayNames,
 ] as const
 
-export type PrimitiveTypeName = typeof primitiveTypeNames[number];
-export type ObjectTypeNames = typeof objectTypeNames[number]
+export type PrimitiveTypeNames = typeof primitiveTypeNames[number];
+export type ObjectTypeNames = typeof objectTypeNames[number];
+export type TypedArray = typeof typedArrayNames[number];
+export type TypeNames = ObjectTypeNames | PrimitiveTypeNames;
 
 export type PrimitiveType =
   | undefined
@@ -34,19 +58,6 @@ export type PrimitiveType =
   | boolean
   | bigint
   | symbol
-
-export type TypedArray =
-  | Int8Array
-	| Uint8Array
-	| Uint8ClampedArray
-	| Int16Array
-	| Uint16Array
-	| Int32Array
-	| Uint32Array
-	| Float32Array
-	| Float64Array
-	| BigInt64Array
-	| BigUint64Array;
 
 export type FalsyType = undefined | null | '' | 0 | false
 

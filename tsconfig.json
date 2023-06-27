@@ -1,5 +1,5 @@
 {
-  "extends": "@yellowryan01/tsconfig",
+  "extends": "@yellowryan/tsconfig",
   "compilerOptions": {
     "outDir": "dist"
   },
