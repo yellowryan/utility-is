@@ -103,7 +103,7 @@ u.isFalsy = <T>(value: T | FalsyType): value is FalsyType => !value;
 u.isTruthy = <T>(value: T | FalsyType): value is T => Boolean(value);
 
 u.isNull = (value: unknown): value is null => value === null;
-u.inUndefined = (value: unknown): value is undefined => value === undefined;
+u.isUndefined = (value: unknown): value is undefined => value === undefined;
 u.isNonNullable = <T>(value: T) => value !== undefined && value !== null;
 
 u.isNaN = (value: unknown): value is unknown => Number.isNaN(value);
