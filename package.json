@@ -1,5 +1,5 @@
 {
-  "name": "@yellowryan/utility-is",
+  "name": "utility-is",
   "version": "1.0.0",
   "description": "type check",
   "packageManager": "^pnpm@7.28.0",
