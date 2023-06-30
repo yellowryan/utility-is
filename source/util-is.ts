@@ -1,4 +1,5 @@
-import { FalsyType, PrimitiveType, PrimitiveTypeNames, ObjectTypeNames, ArrayLike, primitiveTypeNames, TypeNames } from '../.internal/types';
+import type { FalsyType, PrimitiveType, PrimitiveTypeNames, ObjectTypeNames, ArrayLike, TypeNames, Class } from '../.internal/types';
+import { primitiveTypeNames } from '../.internal/types';
 import { isObjectTypeName } from '../.internal/utils';
 
 const { toString } = Object.prototype;
@@ -85,19 +86,47 @@ u.isFunction = getTypeOf<Function>('function');
 u.isAsyncFunction = <T extends (...args: unknown[]) => unknown>(value: T) => getObjectType(value) === 'AsyncFunction';
 u.isGeneratorFunction = <T extends (...args: unknown[]) => unknown>(value: T) => getObjectType(value) === 'GeneratorFunction';
 
+u.isClass = (value: unknown): value is Class => u.isFunction(value) && value.toString().startsWith('class ');
+
 u.isSymbol = getTypeOf<symbol>('symbol');
+
+u.isIterable = (value: any) => {
+  if (value?.[Symbol.iterator]) return true;
+
+  let proto = Object.getPrototypeOf(value);
+
+  while (proto) {
+    if (proto?.[Symbol.iterator]) return true;
+
+    proto = Object.getPrototypeOf(proto);
+  }
+
+  return false;
+}
 
 u.isNullable = (value: unknown): value is undefined | null => value === undefined || value === null;
 
 u.isArray = (value: unknown) => Array.isArray(value);
 u.isEmptyArray = (value: unknown): value is unknown[] => u.isArray(value) && (value as unknown[]).length === 0;
-u.isNotEmptyArray = (value: unknown): value is unknown[] => u.isArray(value) && (value as unknown[]).length > 0;
+u.isNonEmptyArray = (value: unknown): value is unknown[] => u.isArray(value) && (value as unknown[]).length > 0;
 
 u.isArrayLike = <T>(value: unknown): value is ArrayLike<T> => {
   return u.isNonNullable(value) && validArrayLength((value as ArrayLike<T>).length)
 }
 
 u.isObject = (value: unknown): value is object => !u.isNull(value) && (typeof value === 'object' || typeof value === 'function')
+
+u.isPlainObject = (value: unknown) => {
+  if (typeof value !== 'object' || value === null) return false;
+
+  if (Object.getPrototypeOf(value) === null) return true;
+
+  let proto = value;
+  while(Object.getPrototypeOf(proto) !== null) {
+    proto = Object.getPrototypeOf(proto);
+  }
+  return  Object.getPrototypeOf(value) === proto;
+}
 
 u.isFalsy = <T>(value: T | FalsyType): value is FalsyType => !value;
 u.isTruthy = <T>(value: T | FalsyType): value is T => Boolean(value);
@@ -120,13 +149,17 @@ u.isError = isObjectType<Error>('Error');
 
 u.isMap = <Key = unknown, Value = unknown>(value: unknown): value is Map<Key, Value> => isObjectType<Map<Key, Value>>('Map')(value)
 u.isEmptyMap = (value: unknown): value is Map<unknown, unknown> => u.isMap(value) && value.size === 0;
+u.isNonEmptyMap = (value: unknown): value is Map<unknown, unknown> => u.isMap(value) && value.size > 0;
 
 u.isSet = <Value = unknown>(value: unknown): value is Set<Value> => isObjectType<Set<Value>>('Set')(value);
 u.isEmptySet = (value: unknown): value is Set<unknown> => u.isSet(value) && value.size === 0;
+u.isNonEmptySet = (value: unknown): value is Set<unknown> => u.isSet(value) && value.size > 0;
 
 u.isWeakMap = <Key extends object, Value>(value: unknown): value is WeakMap<Key, Value> => isObjectType<WeakMap<Key, Value>>('WeakMap')(value);
 
 u.isWeakSet = <Value extends object>(value: unknown): value is WeakSet<Value> => isObjectType<WeakSet<Value>>('WeakSet')(value);
+
+u.isWeakRef = <Value extends object>(value: unknown): value is WeakRef<Value> => isObjectType<WeakRef<Value>>('WeakRef')(value);
 
 // input value could be null rather than 'null'
 u.isPrimitive = (value: unknown): value is PrimitiveType => isPrimiveteTypeName(value) || u.isNull(value)
@@ -149,5 +182,7 @@ u.isSafeInteger = (value: unknown): value is number => Number.isSafeInteger(valu
 u.isBuffer = (value: unknown): value is Buffer => Buffer.isBuffer(value);
 
 u.isBlob = (value: unknown): value is Blob => isObjectType<Blob>('Blob')(value);
+
+u.isInfinite = (value: unknown): value is Number => Number.POSITIVE_INFINITY === value || Number.NEGATIVE_INFINITY === value;
 
 export default u;

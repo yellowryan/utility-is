@@ -32,6 +32,7 @@ export const objectTypeNames = [
   'Set',
   'WeakMap',
   'WeakSet',
+  'WeakRef',
   'RegExp',
   'Promise',
   'Function',
@@ -60,6 +61,8 @@ export type PrimitiveType =
   | symbol
 
 export type FalsyType = undefined | null | '' | 0 | false
+
+export type Class<T = unknown, Arguments extends any[] = any[]> = new (...args: Arguments) => T;
 
 export type ArrayLike<T> = {
   readonly [index: number]: T,
